@@ -6,9 +6,9 @@ from pydantic import BaseModel
 # fast api ile bir uygulama oluşturma
 app=FastAPI()
 
-"""class Item(BaseModel):
-    text : str = None
-    is_done : bool = False """
+class Item(BaseModel):
+    text: str = None
+    is_done: bool = False 
 
 items=[]
 
@@ -19,8 +19,8 @@ def root():
     return {"Merhaba":"Dunya"}
 
 
-@app.post("/items")# bağlantıya ek bu yazılırsa aşağıdaki fonksiyona erişilecek
-def create_item(item:str):
+@app.post("/items",response_model=list[Item])# bağlantıya ek bu yazılırsa aşağıdaki fonksiyona erişilecek
+def create_item(item: Item):
     items.append(item)
     return items     
 
@@ -32,11 +32,10 @@ def list_items(limit: int =3 ):
     return items[0:limit]
 
 
-
-@app.get("/items/{item_id}")# url yolu ile input alınıp bu get_item fonksiyonuna iletilir 
+@app.get("/items/{item_id}",response_model=Item)# url yolu ile input alınıp bu get_item fonksiyonuna iletilir 
 
 # get item fonksiyonu ile url de item/id şeklinde gelen id ile item listesindeki id ye göre o id items listesinden çekilir 
-def get_item(item_id: int )-> str:# bu şekilde bir kullanım ile item integer olarak alınan bir ifadenin string halinde kullanılması sağlanır veya yazıldığı gibi daha öncesinde tipi belirlenmiş olan Item nesnesine dönüştürebiliriz   
+def get_item(item_id: int )-> Item:# bu şekilde bir kullanım ile item integer olarak alınan bir ifadenin string halinde kullanılması sağlanır veya yazıldığı gibi daha öncesinde tipi belirlenmiş olan Item nesnesine dönüştürebiliriz   
     if item_id< len(items):
         return items[item_id]    # item id ye göre listeden eleman seçilir
     else :
